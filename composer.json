@@ -1,0 +1,19 @@
+{
+    "name": "selltag/nacex-bundle",
+    "description": "This module provides a service to call Nacex SOAP methods",
+    "keywords": ["nacex", "client"],
+    "homepage": "https://github.com/selltag/NacexBundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Javier Aguirre",
+            "email": "hello@javaguirre.net",
+            "homepage": "http://javaguirre.net"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Selltag\\Bundle\\NacexBundle": "" }
+    },
+    "target-dir": "Selltag/Bundle/NacexBundle"
+}
