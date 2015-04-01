@@ -13,7 +13,7 @@
         }
     ],
     "autoload": {
-        "psr-0": { "Selltag\\Bundle\\NacexBundle": "" }
+        "psr-0": { "Selltag\\NacexBundle": "" }
     },
-    "target-dir": "Selltag/Bundle/NacexBundle"
+    "target-dir": "Selltag/NacexBundle"
 }
