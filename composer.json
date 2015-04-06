@@ -1,6 +1,6 @@
 {
     "name": "selltag/nacex-bundle",
-    "description": "This module provides a service to call Nacex SOAP methods",
+    "description": "This module provides a client service for the Nacex SOAP server",
     "keywords": ["nacex", "client"],
     "homepage": "https://github.com/selltag/NacexBundle",
     "type": "symfony-bundle",
