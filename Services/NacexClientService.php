@@ -1,8 +1,10 @@
 <?php
 
-namespace Selltag\Bundle\NacexBundle\Services;
+namespace Selltag\NacexBundle\Services;
 
-class NacexService
+use Selltag\NacexBundle\Exceptions\NacexClientException;
+
+class NacexClientService
 {
     const NACEX_SOAP_SCHEMA =  'http://schemas.xmlsoap.org/soap/envelope/';
 
@@ -23,10 +25,7 @@ class NacexService
         );
 
         $this->nacexClient = new \SoapClient($nacexUrl . '?wsdl', $options);
-        $this->credentials = array(
-            'String_1' => $nacexUsername,
-            'String_2' => $nacexPassword
-        );
+        $this->credentials = array($nacexUsername, $nacexPassword);
     }
 
     private function setRequestParameters($params)
@@ -35,26 +34,39 @@ class NacexService
         $count = 1;
 
         foreach ($params as $param) {
-            $nextKey = $this->buildKey($param, count);
+            $nextKey = $this->nextKey($param, $count);
             $requestParameters[$nextKey] = $this->setRequestParameter($param);
-
             $count++;
         }
+
+        return $requestParameters;
+    }
+
+    private function setRequestParameter($param)
+    {
+        $dataResult = array();
+
+        if (is_string($param)) {
+            return $param;
+        }
+
+        if (is_array($param)) {
+            foreach ($param as $key => $elem) {
+                $dataResult[] = implode('=', array($key, $elem));
+            }
+        }
+
+        return $dataResult;
     }
 
     private function nextKey($param, $count)
     {
-        $validParameter = null;
-
-        if (is_array($param)) {
-            $validParameter = $this->setKey($param, $count, self::STRING_PARAM);
-        } elseif (is_string($param)) {
-            $validParameter = $this->setKey($param, $count, self::ARRAY_PARAM);
+        if (!is_array($param) && !is_string($param)) {
+            throw new NacexClientException("The parameter $param is not valid");
         }
 
-        if ($validParameter === null) {
-            throw new NacexException("The parameter $param is not valid");
-        }
+        $paramType = is_array($param) ? self::ARRAY_PARAM : self::STRING_PARAM;
+        $validParameter = $this->setKey($param, $count, $paramType);
 
         return $validParameter;
     }
@@ -105,22 +117,21 @@ class NacexService
         if (((string)$nodes[0]) == 'ERROR') {
             $errors = (string)$nodes[1];
 
-            throw new NacexException($errors);
+            throw new NacexClientException($errors);
         }
     }
 
-    public function __call($name, $arguments)
+    public function __call($method, $arguments)
     {
-        if (count($arguments) > 1) {
-            return call_user_func_array(
-                array(
-                    $this,
-                    $name
-                ),
-                array_slice($arguments, 1)
+        if (count($arguments) > 0) {
+            $requestParameters = $this->setRequestParameters(
+                array_merge($this->credentials, $arguments)
             );
+            $response = $this->nacexClient->$method($requestParameters);
+
+            return $this->processResponse($method, $response);
         }
 
-        return $this->$name();
+        return $this->nacexClient->$method();
     }
 }

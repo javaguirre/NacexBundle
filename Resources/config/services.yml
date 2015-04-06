@@ -1,10 +1,10 @@
 parameters:
-    selltag_nacex.nacex_client.class: Selltag\NacexBundle\Services\NacexClient
+    selltag_nacex.nacex_client.class: Selltag\NacexBundle\Services\NacexClientService
 
 services:
     selltag_nacex.nacex_client:
         class: %selltag_nacex.nacex_client.class%
         arguments:
-            - %selltag_nacex.nacex_username%
-            - %selltag_nacex.nacex_password%
-            - %selltag_nacex.nacex_url%
+            - %nacex_username%
+            - %nacex_password%
+            - %nacex_url%
