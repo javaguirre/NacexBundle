@@ -21,7 +21,7 @@ class NacexClientService
     public function __call($method, $arguments)
     {
         if (count($arguments) > 0) {
-            $serializer = new NacexSerializer($this->credentials, $arguments);
+            $serializer = new NacexSerializer($this->credentials, $arguments[0]);
             $response = $this->nacexClient->execute(
                 $method,
                 $serializer->serialize()

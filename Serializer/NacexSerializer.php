@@ -2,6 +2,7 @@
 
 namespace Selltag\NacexBundle\Serializer;
 
+use Selltag\NacexBundle\Exceptions\NacexClientException;
 
 class NacexSerializer
 {
@@ -52,12 +53,16 @@ class NacexSerializer
             }
         }
 
+        if (empty($dataResult)) {
+            $dataResult = '';
+        }
+
         return $dataResult;
     }
 
     private function nextKey($param, $count)
     {
-        if (!is_array($param) && !is_string($param)) {
+        if (!is_array($param) && !is_string($param) && !is_null($param)) {
             throw new NacexClientException("The parameter $param is not valid");
         }
 
