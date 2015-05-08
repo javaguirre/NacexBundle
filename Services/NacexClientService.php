@@ -15,7 +15,7 @@ class NacexClientService
     public function __construct($nacexUsername, $nacexPassword, $nacexUrl)
     {
         $this->nacexClient = new NacexClient($nacexUrl);
-        $this->credentials = array($nacexUsername, $nacexPassword);
+        $this->credentials = array($nacexUsername, md5($nacexPassword));
     }
 
     public function __call($method, $arguments)
