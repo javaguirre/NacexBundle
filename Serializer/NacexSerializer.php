@@ -44,7 +44,11 @@ class NacexSerializer
 
         if (is_array($param)) {
             foreach ($param as $key => $elem) {
-                $dataResult[] = implode('=', array($key, $elem));
+                if (is_null($elem)) {
+                    $dataResult[] = '';
+                } else {
+                    $dataResult[] = implode('=', array($key, $elem));
+                }
             }
         }
 
