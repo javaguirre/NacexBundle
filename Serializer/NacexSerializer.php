@@ -62,32 +62,47 @@ class NacexSerializer
 
     private function nextKey($param, $count)
     {
-        if (!is_array($param) && !is_string($param) && !is_null($param)) {
+        if (!$this->isTypeValid($param)) {
             throw new NacexClientException("The parameter $param is not valid");
         }
 
-        $paramType = is_array($param) ? self::ARRAY_PARAM : self::STRING_PARAM;
-        $validParameter = $this->setKey($param, $count, $paramType);
-
-        return $validParameter;
+        return $this->getKey($param, $count);
     }
 
     /**
-     * Calculates the next key needed for a correct
+     * Get the next key needed for a correct
      * Nacex SOAP request
      *
      * @param string $param
+     * @param int $count
      *
      * @return string
      */
-    private function setKey($param, $count, $type)
+    private function getKey($param, $count)
     {
+        $paramType = is_array($param) ?
+            self::ARRAY_PARAM : self::STRING_PARAM;
+
         return implode(
             '_',
             array(
-                $type,
-                (string)$count
+                $paramType,
+                (string) $count
             )
         );
+    }
+
+    /**
+     * Control if the parameter is valid
+     * Valid parameters are string, array
+     * or null
+     *
+     * @param string $param
+     *
+     * @return bool
+     */
+    private function isTypeValid($param)
+    {
+        return is_array($param) || is_string($param) || is_null($param);
     }
 }
