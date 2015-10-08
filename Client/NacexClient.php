@@ -7,6 +7,10 @@ use Selltag\NacexBundle\Exceptions\NacexClientException;
 class NacexClient
 {
     const NACEX_SOAP_SCHEMA =  'http://schemas.xmlsoap.org/soap/envelope/';
+    const NACEX_XPATH_RESULT = '//env:Envelope/env:Body/ns0:%sResponse/result';
+    const CONNECTION_TIMEOUT = 600;
+    const TRACE_ENABLED = 1;
+    const EXCEPTIONS_ENABLED = 1;
 
     protected $soapClient;
 
@@ -14,13 +18,13 @@ class NacexClient
     {
         $options = array(
             'location'     => $url,
-            'trace'        => 1,
-            'exceptions'   => 1,
+            'trace'        => self::TRACE_ENABLED,
+            'exceptions'   => self::EXCEPTIONS_ENABLED,
             'style'        => SOAP_DOCUMENT,
             'use'          => SOAP_LITERAL,
             'soap_version' => SOAP_1_1,
             'encoding'     => 'UTF-8',
-            'connection_timeout' => 600
+            'connection_timeout' => self::CONNECTION_TIMEOUT
         );
 
         $this->soapClient = new \SoapClient($url . '?wsdl', $options);
@@ -40,9 +44,7 @@ class NacexClient
         $xml->registerXPathNamespace(
             'ns', 'urn:soap/types'
         );
-        $nodes = $xml->xpath(
-            '//env:Envelope/env:Body/ns0:' . $action . 'Response/result'
-        );
+        $nodes = $xml->xpath(sprintf(self::NACEX_XPATH_RESULT, $action));
 
         return $nodes;
     }
@@ -57,7 +59,7 @@ class NacexClient
         $this->checkErrors($nodes);
 
         foreach ($nodes as $key => $node) {
-            $response[$key] = (string)$node;
+            $response[$key] = (string) $node;
         }
 
         return $response;
@@ -65,10 +67,15 @@ class NacexClient
 
     private function checkErrors($nodes)
     {
-        if (((string)$nodes[0]) == 'ERROR') {
-            $errors = (string)$nodes[1];
+        if ($this->hasError($nodes)) {
+            $errors = (string) $nodes[1];
 
             throw new NacexClientException($errors);
         }
+    }
+
+    private function hasError($nodes)
+    {
+        return ((string)$nodes[0]) == 'ERROR';
     }
 }
