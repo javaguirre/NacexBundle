@@ -1,3 +1,0 @@
-selltag_nacex_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: SelltagNacexBundle:Default:index }
