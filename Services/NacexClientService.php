@@ -2,7 +2,6 @@
 
 namespace Selltag\NacexBundle\Services;
 
-use Selltag\NacexBundle\Exceptions\NacexClientException;
 use Selltag\NacexBundle\Client\NacexClient;
 use Selltag\NacexBundle\Serializer\NacexSerializer;
 
