@@ -54,7 +54,7 @@ This Bundle provides a client to access the **Nacex SOAP API**.
         nacex_url: %nacex_url%
     ```
 
-  4. You can define these parameters in your `parameters.yml`:
+ 4. You can define these parameters in your `parameters.yml`:
 
     ```yaml
     # app/config/parameters.yml.dist
