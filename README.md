@@ -1,5 +1,7 @@
 # Introduction
 
+[![Build Status](https://travis-ci.org/javaguirre/NacexBundle.svg?branch=master)](https://travis-ci.org/javaguirre/NacexBundle)
+
 This Bundle provides a client to access the **Nacex SOAP API**.
 
 ## Installation
